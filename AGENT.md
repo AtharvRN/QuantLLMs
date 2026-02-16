@@ -12,11 +12,18 @@ This repo contains scripts to run safety-focused LLM evaluations using vLLM. The
 2. `vllm` installed separately if not already available.
 
 ## SafetyBench Zero-Shot (test_en)
+1. Download the split (offline):
+```
+python /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/scripts/download_safetybench.py \
+  --split test_en \
+  --out /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/data/safetybench/test_en.jsonl
+```
 1. Run:
 ```
 python /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/scripts/run_safetybench_vllm.py \
   --model meta-llama/Meta-Llama-3-8B-Instruct \
   --split test_en \
+  --input-jsonl /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/data/safetybench/test_en.jsonl \
   --out /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/output/safetybench/test_en.jsonl \
   --pred-json /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/output/safetybench/test_en.preds.json
 ```

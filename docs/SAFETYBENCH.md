@@ -13,11 +13,19 @@ This document describes how to run SafetyBench using the vLLM `LLM()` API with a
 1. `pip install -r /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/requirements.txt`
 2. `pip install vllm`
 
+## Step 1: Download Data (offline run)
+```
+python /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/scripts/download_safetybench.py \
+  --split test_en \
+  --out /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/data/safetybench/test_en.jsonl
+```
+
 ## Zero-Shot test_en
 ```
 python /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/scripts/run_safetybench_vllm.py \
   --model meta-llama/Meta-Llama-3-8B-Instruct \
   --split test_en \
+  --input-jsonl /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/data/safetybench/test_en.jsonl \
   --out /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/output/safetybench/test_en.jsonl \
   --pred-json /Users/atharvramesh/UCSD/Winter2026/ECE285/QuantLLMs/output/safetybench/test_en.preds.json
 ```

@@ -57,6 +57,16 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-model-len", type=int, default=4096, help="Max model length for vLLM")
     p.add_argument("--gpu-memory-utilization", type=float, default=0.9, help="vLLM GPU memory utilization")
     p.add_argument(
+        "--quantization",
+        default="",
+        help="Optional vLLM quantization mode (e.g., awq, gptq, gguf)",
+    )
+    p.add_argument(
+        "--tokenizer",
+        default="",
+        help="Optional tokenizer override (useful for GGUF)",
+    )
+    p.add_argument(
         "--out",
         default="output/safetybench/test_en.jsonl",
         help="Output JSONL path for generations",
@@ -196,13 +206,19 @@ def main() -> int:
         max_tokens=args.max_tokens,
     )
 
-    llm = LLM(
-        model=args.model,
-        dtype=args.dtype,
-        max_model_len=args.max_model_len,
-        tensor_parallel_size=args.tensor_parallel_size,
-        gpu_memory_utilization=args.gpu_memory_utilization,
-    )
+    llm_kwargs = {
+        "model": args.model,
+        "dtype": args.dtype,
+        "max_model_len": args.max_model_len,
+        "tensor_parallel_size": args.tensor_parallel_size,
+        "gpu_memory_utilization": args.gpu_memory_utilization,
+    }
+    if args.quantization:
+        llm_kwargs["quantization"] = args.quantization
+    if args.tokenizer:
+        llm_kwargs["tokenizer"] = args.tokenizer
+
+    llm = LLM(**llm_kwargs)
     tokenizer = llm.get_tokenizer()
 
     preds: Dict[str, Optional[int]] = {}

@@ -1,0 +1,6 @@
+autoawq
+auto-gptq
+datasets>=2.18.0
+transformers>=4.45.0
+accelerate>=0.30.0
+torch

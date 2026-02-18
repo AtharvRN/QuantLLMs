@@ -25,11 +25,11 @@ DEFAULT_INSTRUCTION = (
 )
 
 ANSWER_PATTERNS = [
-    re.compile(r"(?i)\\banswer\\s*[:\\-]?\\s*([A-Z])\\b"),
-    re.compile(r"(?i)\\b(choice|option)\\s*[:\\-]?\\s*([A-Z])\\b"),
-    re.compile(r"\\(([A-Z])\\)"),
-    re.compile(r"(?m)^\\s*([A-Z])[\\.|\\)]"),
-    re.compile(r"\\b([A-Z])\\b"),
+    re.compile(r"(?i)\banswer\s*[:\-]?\s*([A-Z])\b"),
+    re.compile(r"(?i)\b(choice|option)\s*[:\-]?\s*([A-Z])\b"),
+    re.compile(r"\(([A-Z])\)"),
+    re.compile(r"(?m)^\s*([A-Z])[\.|)]"),
+    re.compile(r"\b([A-Z])\b"),
 ]
 
 

@@ -64,3 +64,19 @@ python scripts/find_safety_neurons.py \
   --out output/safety_neurons_qwen3.json
 ```
 - Output: JSON with ranked neuron indices/scores. (Causal patching not included.)
+
+## Safety neuron causal patch demo
+- Script: `scripts/patch_safety_neurons_demo.py`
+- Inputs: top-neuron JSON from `find_safety_neurons.py`, one benign prompt set (for caching), one harmful set.
+- Runs a small demo: patches cached safe activations into the selected neurons during generation on harmful prompts; prints refusal rates before/after.
+- Example:
+```
+python scripts/patch_safety_neurons_demo.py \
+  --model Qwen/Qwen3-4B-Instruct-2507 \
+  --tokenizer Qwen/Qwen3-4B-Instruct-2507 \
+  --top-neurons output/safety_neurons_qwen3_beavertails.json \
+  --harmful data/advbench/advbench.jsonl \
+  --benign data/beavertails/benign.jsonl \
+  --num-harmful 10 \
+  --num-top 200
+```

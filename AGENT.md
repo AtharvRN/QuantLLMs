@@ -53,6 +53,22 @@ python scripts/find_safety_neurons.py \
 ```
 - Output: ranked list of neuron indices/scores (first-stage identification; no causal patching).
 
+## Safety neuron causal patch demo (Transformers-only)
+- Script: `scripts/patch_safety_neurons_demo.py`
+- Uses top neurons from `find_safety_neurons.py`, caches safe activations on a benign prompt, and patches those neurons during generation on harmful prompts to see refusal flips.
+- Example:
+```
+python scripts/patch_safety_neurons_demo.py \
+  --model Qwen/Qwen3-4B-Instruct-2507 \
+  --tokenizer Qwen/Qwen3-4B-Instruct-2507 \
+  --top-neurons output/safety_neurons_qwen3_beavertails.json \
+  --harmful data/advbench/advbench.jsonl \
+  --benign data/beavertails/benign.jsonl \
+  --num-harmful 10 \
+  --num-top 200
+```
+- Prints refusal rates before/after patching on the sampled harmful prompts. (Demo-scale; not vLLM.)
+
 ## Outputs
 1. JSONL with model generations and extracted answers.
 2. JSON mapping of `id -> predicted_index` for submission/scoring.

@@ -23,6 +23,7 @@ Scoring (refusal heuristic in `scripts/score_advbench_outputs.py`):
 `scripts/run_advbench_attacks.py` adds prompt-space attacks:
 - `--attack shallow`: ShallowJail-style system prompt prepend.
 - `--attack uja`: iterative prompt-suffix search (query-only), `--attempts N` (default 6).
+- `--attack rephrase`: "All in How You Ask for It"-style iterative rephrasing by the target model itself.
 
 Examples:
 ```
@@ -48,3 +49,18 @@ python scripts/score_advbench_outputs.py --a output/advbench_qwen3_fp_shallow.js
 ```
 
 Recommended next: run shallow + UJA on both FP and GGUF, then compute ASR (1 - refusal rate) and flip analysis.
+
+## Safety neuron discovery (change-score stage)
+- Script: `scripts/find_safety_neurons.py`
+- Computes activation-contrast scores (safe vs unsafe prompts) over MLP neurons (last-token activations), approximating SafetyNeuron’s first stage.
+- Example:
+```
+python scripts/find_safety_neurons.py \
+  --model Qwen/Qwen3-4B-Instruct-2507 \
+  --safe data/safe_prompts.jsonl \
+  --unsafe data/advbench/advbench.jsonl \
+  --max-prompts 200 \
+  --topk-fraction 0.05 \
+  --out output/safety_neurons_qwen3.json
+```
+- Output: JSON with ranked neuron indices/scores. (Causal patching not included.)

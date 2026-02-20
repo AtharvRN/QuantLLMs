@@ -30,12 +30,28 @@ python scripts/run_safetybench_vllm.py \
 3. Optional: pass `--label-path` to compute accuracy if you have official labels.
 4. See `docs/SAFETYBENCH.md` for details and troubleshooting.
 
-## AdvBench (refusal stress test)
-- Prompts: generate with `datasets` and save to `data/advbench/advbench.jsonl` (script snippet in `results.md`).
-- Run FP vs quantized models (vLLM) using the inline loop pattern in `results.md` to create
+## AdvBench (refusal & jailbreak stress)
+- Prompts: generate with `datasets` → `data/advbench/advbench.jsonl`.
+- Run FP vs quantized (GGUF) with vLLM to produce
   - `output/advbench_qwen3_fp.jsonl`
   - `output/advbench_qwen3_gguf.jsonl`
-- Score refusals and flips: `python scripts/score_advbench_outputs.py --a output/advbench_qwen3_fp.jsonl --b output/advbench_qwen3_gguf.jsonl`.
+- Score refusals/flips: `python scripts/score_advbench_outputs.py --a output/advbench_qwen3_fp.jsonl --b output/advbench_qwen3_gguf.jsonl`.
+- Black-box attacks (prompt-space): `scripts/run_advbench_attacks.py` with `--attack shallow|uja|rephrase` to measure ASR under jailbreaks.
+
+## Safety neuron discovery (GTAC-style)
+- Script: `scripts/find_safety_neurons.py`
+- Inputs: safe and unsafe prompt JSONL (`prompt` field). Computes per-neuron activation change scores (safe vs unsafe) over MLP layers, last-token activations.
+- Example:
+```
+python scripts/find_safety_neurons.py \
+  --model Qwen/Qwen3-4B-Instruct-2507 \
+  --safe data/safe_prompts.jsonl \
+  --unsafe data/advbench/advbench.jsonl \
+  --max-prompts 200 \
+  --topk-fraction 0.05 \
+  --out output/safety_neurons_qwen3.json
+```
+- Output: ranked list of neuron indices/scores (first-stage identification; no causal patching).
 
 ## Outputs
 1. JSONL with model generations and extracted answers.
